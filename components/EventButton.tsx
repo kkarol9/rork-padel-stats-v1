@@ -27,7 +27,7 @@ export default function EventButton({ eventType, onPress }: EventButtonProps) {
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 16,
-    paddingHorizontal: 24,
+    paddingHorizontal: 12,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -37,10 +37,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     flex: 1,
+    minHeight: 60,
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
+    textAlign: 'center',
+    lineHeight: 18,
   },
 });

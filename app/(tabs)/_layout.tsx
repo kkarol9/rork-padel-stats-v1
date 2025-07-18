@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { colors } from '@/constants/colors';
-import { Home, History, PlusCircle } from 'lucide-react-native';
+import { Home, History, PlusCircle, Play } from 'lucide-react-native';
 
 export default function TabLayout() {
   return (
@@ -37,9 +37,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="match-tracking"
+        options={{
+          title: 'Match',
+          tabBarIcon: ({ color, size }) => <Play size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="history"
         options={{
-          title: 'Match History',
+          title: 'History',
           tabBarIcon: ({ color, size }) => <History size={size} color={color} />,
         }}
       />

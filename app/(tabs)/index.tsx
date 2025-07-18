@@ -4,7 +4,6 @@ import { useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
 import { PlusCircle, Play, BarChart2, MapPin } from 'lucide-react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -21,101 +20,99 @@ export default function Dashboard() {
   };
   
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
-      <ScrollView>
-        <View style={styles.header}>
-          <Text style={styles.title}>Paddle Match Stats</Text>
-          <Text style={styles.subtitle}>Track your paddle tennis statistics</Text>
-        </View>
-        
-        {currentMatch && !currentMatch.isCompleted ? (
-          <View style={styles.currentMatchCard}>
-            <Text style={styles.cardTitle}>Current Match</Text>
-            <Text style={styles.matchInfo}>
-              {currentMatch.teams[0].players.map(p => p.name.split(' ')[0]).join('/')} vs {currentMatch.teams[1].players.map(p => p.name.split(' ')[0]).join('/')}
-            </Text>
-            
-            <View style={styles.matchDetails}>
-              <MapPin size={14} color={colors.textLight} />
-              <Text style={styles.matchLocation}>{currentMatch.location}</Text>
-              <Text style={styles.matchRound}>{currentMatch.round}</Text>
-            </View>
-            
-            <View style={styles.scorePreview}>
-              <Text style={styles.scoreText}>
-                {formatScore(currentMatch.score)}
-              </Text>
-            </View>
-            
-            <TouchableOpacity 
-              style={styles.continueButton}
-              onPress={() => router.push('/match-tracking')}
-            >
-              <Play size={20} color="white" />
-              <Text style={styles.buttonText}>Continue Match</Text>
-            </TouchableOpacity>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Paddle Match Stats</Text>
+        <Text style={styles.subtitle}>Track your paddle tennis statistics</Text>
+      </View>
+      
+      {currentMatch && !currentMatch.isCompleted ? (
+        <View style={styles.currentMatchCard}>
+          <Text style={styles.cardTitle}>Current Match</Text>
+          <Text style={styles.matchInfo}>
+            {currentMatch.teams[0].players.map(p => p.name.split(' ')[0]).join('/')} vs {currentMatch.teams[1].players.map(p => p.name.split(' ')[0]).join('/')}
+          </Text>
+          
+          <View style={styles.matchDetails}>
+            <MapPin size={14} color={colors.textLight} />
+            <Text style={styles.matchLocation}>{currentMatch.location}</Text>
+            <Text style={styles.matchRound}>{currentMatch.round}</Text>
           </View>
-        ) : (
+          
+          <View style={styles.scorePreview}>
+            <Text style={styles.scoreText}>
+              {formatScore(currentMatch.score)}
+            </Text>
+          </View>
+          
           <TouchableOpacity 
-            style={styles.newMatchButton}
-            onPress={() => router.push('/new-match')}
+            style={styles.continueButton}
+            onPress={() => router.push('/match-tracking')}
           >
-            <PlusCircle size={24} color="white" />
-            <Text style={styles.newMatchText}>Start New Match</Text>
+            <Play size={20} color="white" />
+            <Text style={styles.buttonText}>Continue Match</Text>
           </TouchableOpacity>
+        </View>
+      ) : (
+        <TouchableOpacity 
+          style={styles.newMatchButton}
+          onPress={() => router.push('/new-match')}
+        >
+          <PlusCircle size={24} color="white" />
+          <Text style={styles.newMatchText}>Start New Match</Text>
+        </TouchableOpacity>
+      )}
+      
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Recent Matches</Text>
+        
+        {recentMatches.length > 0 ? (
+          recentMatches.map((match) => (
+            <TouchableOpacity 
+              key={match.id} 
+              style={styles.matchItem}
+              onPress={() => router.push({
+                pathname: '/match-statistics',
+                params: { matchId: match.id }
+              })}
+            >
+              <View>
+                <Text style={styles.matchTeams}>
+                  {match.teams[0].players.map(p => p.name.split(' ')[0]).join('/')} vs {match.teams[1].players.map(p => p.name.split(' ')[0]).join('/')}
+                </Text>
+                <View style={styles.matchDetails}>
+                  <MapPin size={14} color={colors.textLight} />
+                  <Text style={styles.matchLocation}>{match.location}</Text>
+                  <Text style={styles.matchDate}>
+                    {new Date(match.date).toLocaleDateString()}
+                  </Text>
+                </View>
+              </View>
+              
+              <View style={styles.matchScore}>
+                <Text style={styles.scoreText}>
+                  {match.score.sets[0]}-{match.score.sets[1]}
+                </Text>
+                <BarChart2 size={16} color={colors.primary} />
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyText}>No match history yet</Text>
+          </View>
         )}
         
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Matches</Text>
-          
-          {recentMatches.length > 0 ? (
-            recentMatches.map((match) => (
-              <TouchableOpacity 
-                key={match.id} 
-                style={styles.matchItem}
-                onPress={() => router.push({
-                  pathname: '/match-statistics',
-                  params: { matchId: match.id }
-                })}
-              >
-                <View>
-                  <Text style={styles.matchTeams}>
-                    {match.teams[0].players.map(p => p.name.split(' ')[0]).join('/')} vs {match.teams[1].players.map(p => p.name.split(' ')[0]).join('/')}
-                  </Text>
-                  <View style={styles.matchDetails}>
-                    <MapPin size={14} color={colors.textLight} />
-                    <Text style={styles.matchLocation}>{match.location}</Text>
-                    <Text style={styles.matchDate}>
-                      {new Date(match.date).toLocaleDateString()}
-                    </Text>
-                  </View>
-                </View>
-                
-                <View style={styles.matchScore}>
-                  <Text style={styles.scoreText}>
-                    {match.score.sets[0]}-{match.score.sets[1]}
-                  </Text>
-                  <BarChart2 size={16} color={colors.primary} />
-                </View>
-              </TouchableOpacity>
-            ))
-          ) : (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyText}>No match history yet</Text>
-            </View>
-          )}
-          
-          {matches.length > 3 && (
-            <TouchableOpacity 
-              style={styles.viewAllButton}
-              onPress={() => router.push('/history')}
-            >
-              <Text style={styles.viewAllText}>View All Matches</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        {matches.length > 3 && (
+          <TouchableOpacity 
+            style={styles.viewAllButton}
+            onPress={() => router.push('/history')}
+          >
+            <Text style={styles.viewAllText}>View All Matches</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -123,6 +120,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  scrollContent: {
+    paddingBottom: 20,
   },
   header: {
     padding: 16,
