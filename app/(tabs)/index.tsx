@@ -12,11 +12,11 @@ export default function Dashboard() {
   
   const recentMatches = matches.slice(0, 3);
   
-  const formatScore = (score: Score) => {
+  const formatScore = (score: Score): string => {
     if (score.tiebreak) {
       return `${score.sets[0]}-${score.sets[1]} | ${score.games[0]}-${score.games[1]} | ${score.tiebreak.points[0]}-${score.tiebreak.points[1]}`;
     } else {
-      return `${score.sets[0]}-${score.sets[1]} | ${score.games[0]}-${score.games[0]} | ${score.points[0]}-${score.points[1]}`;
+      return `${score.sets[0]}-${score.sets[1]} | ${score.games[0]}-${score.games[1]} | ${score.points[0]}-${score.points[1]}`;
     }
   };
   

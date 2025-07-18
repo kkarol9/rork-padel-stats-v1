@@ -70,10 +70,7 @@ export default function MatchTracking() {
   };
 
   const handleViewStatistics = () => {
-    router.push({
-      pathname: '/match-statistics',
-      params: { matchId: currentMatch.id }
-    });
+    router.push('/match-statistics');
   };
   
   const handleEndMatch = () => {
@@ -86,10 +83,7 @@ export default function MatchTracking() {
           text: 'End Match', 
           onPress: () => {
             completeMatch();
-            router.replace({
-              pathname: '/match-statistics',
-              params: { matchId: currentMatch.id }
-            });
+            router.push('/match-statistics');
           } 
         },
       ]

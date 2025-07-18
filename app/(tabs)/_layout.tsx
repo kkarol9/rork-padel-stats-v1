@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { colors } from '@/constants/colors';
-import { Home, History, PlusCircle, Play } from 'lucide-react-native';
+import { Home, History, PlusCircle, Play, BarChart2 } from 'lucide-react-native';
 
 export default function TabLayout() {
   return (
@@ -41,6 +41,13 @@ export default function TabLayout() {
         options={{
           title: 'Match',
           tabBarIcon: ({ color, size }) => <Play size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="match-statistics"
+        options={{
+          title: 'Statistics',
+          tabBarIcon: ({ color, size }) => <BarChart2 size={size} color={color} />,
         }}
       />
       <Tabs.Screen

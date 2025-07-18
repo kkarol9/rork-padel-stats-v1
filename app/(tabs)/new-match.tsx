@@ -5,11 +5,11 @@ import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
 import { Player, Team } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { UserRound, Users, MapPin, Trophy } from 'lucide-react-native';
+import { UserRound, Users, MapPin, Trophy, AlertCircle } from 'lucide-react-native';
 
 export default function NewMatch() {
   const router = useRouter();
-  const { createMatch } = useMatchStore();
+  const { createMatch, currentMatch } = useMatchStore();
   
   const [team1Player1, setTeam1Player1] = useState('');
   const [team1Player2, setTeam1Player2] = useState('');
@@ -18,7 +18,25 @@ export default function NewMatch() {
   const [location, setLocation] = useState('');
   const [round, setRound] = useState('');
   
+  // Check if there's an unfinished match
+  const hasUnfinishedMatch = currentMatch && !currentMatch.isCompleted;
+  
   const handleStartMatch = () => {
+    if (hasUnfinishedMatch) {
+      Alert.alert(
+        'Unfinished Match',
+        'You have an unfinished match. Please complete it first before starting a new one.',
+        [
+          { text: 'OK' },
+          { 
+            text: 'Go to Match', 
+            onPress: () => router.push('/match-tracking')
+          }
+        ]
+      );
+      return;
+    }
+    
     // Validate all players are entered
     if (!team1Player1 || !team1Player2 || !team2Player1 || !team2Player2) {
       Alert.alert('Missing Information', 'Please enter names for all players');
@@ -53,6 +71,36 @@ export default function NewMatch() {
     // Navigate to match tracking
     router.push('/match-tracking');
   };
+  
+  if (hasUnfinishedMatch) {
+    return (
+      <SafeAreaView style={styles.container} edges={['bottom']}>
+        <View style={styles.unfinishedMatchContainer}>
+          <AlertCircle size={64} color={colors.warning} />
+          <Text style={styles.unfinishedTitle}>Unfinished Match</Text>
+          <Text style={styles.unfinishedMessage}>
+            You have an unfinished match in progress. Please complete it before starting a new one.
+          </Text>
+          
+          <View style={styles.matchInfo}>
+            <Text style={styles.matchTeams}>
+              {currentMatch.teams[0].players.map(p => p.name.split(' ')[0]).join('/')} vs {currentMatch.teams[1].players.map(p => p.name.split(' ')[0]).join('/')}
+            </Text>
+            <Text style={styles.matchDetails}>
+              {currentMatch.location} • {currentMatch.round}
+            </Text>
+          </View>
+          
+          <TouchableOpacity 
+            style={styles.continueButton}
+            onPress={() => router.push('/match-tracking')}
+          >
+            <Text style={styles.continueButtonText}>Continue Match</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
   
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -175,6 +223,59 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textLight,
     marginTop: 4,
+  },
+  unfinishedMatchContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  unfinishedTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  unfinishedMessage: {
+    fontSize: 16,
+    color: colors.textLight,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  matchInfo: {
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  matchTeams: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 4,
+  },
+  matchDetails: {
+    fontSize: 14,
+    color: colors.textLight,
+  },
+  continueButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    padding: 16,
+    paddingHorizontal: 32,
+  },
+  continueButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   matchDetailsSection: {
     backgroundColor: colors.card,
