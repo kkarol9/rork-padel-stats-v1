@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
+import { Score } from '@/types';
 import { PlusCircle, Play, BarChart2, MapPin } from 'lucide-react-native';
 
 export default function Dashboard() {
@@ -11,7 +12,7 @@ export default function Dashboard() {
   
   const recentMatches = matches.slice(0, 3);
   
-  const formatScore = (score) => {
+  const formatScore = (score: Score) => {
     if (score.tiebreak) {
       return `${score.sets[0]}-${score.sets[1]} | ${score.games[0]}-${score.games[1]} | ${score.tiebreak.points[0]}-${score.tiebreak.points[1]}`;
     } else {
