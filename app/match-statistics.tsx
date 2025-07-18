@@ -3,10 +3,9 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import ScoreDisplay from '@/components/ScoreDisplay';
 import StatisticsCard from '@/components/StatisticsCard';
-import { Share2, MapPin, Trophy } from 'lucide-react-native';
+import { Share2, MapPin, Trophy, ArrowLeft } from 'lucide-react-native';
 
 export default function MatchStatistics() {
   const router = useRouter();
@@ -32,11 +31,20 @@ export default function MatchStatistics() {
     console.log('Share match statistics');
   };
   
+  const handleBackToDashboard = () => {
+    router.push('/');
+  };
+  
   return (
     <>
       <Stack.Screen 
         options={{ 
           title: 'Match Statistics',
+          headerLeft: () => (
+            <TouchableOpacity onPress={handleBackToDashboard} style={styles.backButton}>
+              <ArrowLeft size={24} color={colors.primary} />
+            </TouchableOpacity>
+          ),
           headerRight: () => (
             <TouchableOpacity onPress={handleShare}>
               <Share2 size={24} color={colors.primary} />
@@ -45,7 +53,7 @@ export default function MatchStatistics() {
         }} 
       />
       
-      <SafeAreaView style={styles.container} edges={['bottom']}>
+      <View style={styles.container}>
         <ScrollView>
           <View style={styles.header}>
             <Text style={styles.title}>{matchTitle}</Text>
@@ -120,7 +128,7 @@ export default function MatchStatistics() {
             </View>
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </>
   );
 }
@@ -129,6 +137,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  backButton: {
+    padding: 8,
+    marginLeft: -8,
   },
   header: {
     padding: 16,
