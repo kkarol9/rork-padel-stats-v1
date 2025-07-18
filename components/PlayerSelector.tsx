@@ -50,31 +50,31 @@ export default function PlayerSelector({ teams, onSelectPlayer, onBack, title }:
 
 const styles = StyleSheet.create({
   container: {
-    padding: 4,
+    padding: 8,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '700',
     color: colors.text,
-    marginBottom: 24,
+    marginBottom: 32,
     textAlign: 'center',
   },
   teamSection: {
-    marginBottom: 24,
+    marginBottom: 32,
   },
   teamLabel: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
-    color: colors.textLight,
-    marginBottom: 12,
+    color: colors.text,
+    marginBottom: 16,
   },
   playerList: {
-    gap: 12,
+    gap: 16,
   },
   playerButton: {
-    backgroundColor: colors.background,
-    padding: 20,
-    borderRadius: 12,
+    backgroundColor: colors.lightGray,
+    padding: 24,
+    borderRadius: 16,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   playerName: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '600',
     color: colors.text,
   },
 });

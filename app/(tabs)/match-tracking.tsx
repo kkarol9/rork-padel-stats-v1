@@ -9,7 +9,7 @@ import EventButton from '@/components/EventButton';
 import PlayerSelector from '@/components/PlayerSelector';
 import ShotTypeSelector from '@/components/ShotTypeSelector';
 import PlayerStatsCard from '@/components/PlayerStatsCard';
-import { X, BarChart3, RotateCcw } from 'lucide-react-native';
+import { X, BarChart3, RotateCcw, ArrowLeft } from 'lucide-react-native';
 
 export default function MatchTracking() {
   const router = useRouter();
@@ -85,6 +85,10 @@ export default function MatchTracking() {
     setSelectedEventType(null);
     setSelectedPlayerId(null);
   };
+
+  const handleBack = () => {
+    router.back();
+  };
   
   const renderPlayerStatsCard = ({ item }: { item: Player }) => (
     <PlayerStatsCard match={currentMatch} player={item} />
@@ -95,6 +99,12 @@ export default function MatchTracking() {
       <Stack.Screen 
         options={{ 
           title: 'Match Tracking',
+          headerLeft: () => (
+            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+              <ArrowLeft size={24} color={colors.primary} />
+              <Text style={styles.backText}>Back</Text>
+            </TouchableOpacity>
+          ),
         }} 
       />
       
@@ -110,10 +120,12 @@ export default function MatchTracking() {
           showsHorizontalScrollIndicator={false}
           pagingEnabled
           onMomentumScrollEnd={(e) => {
-            const index = Math.round(e.nativeEvent.contentOffset.x / 316);
+            const index = Math.round(e.nativeEvent.contentOffset.x / 332);
             setCurrentPlayerIndex(index);
           }}
           style={styles.statsCarousel}
+          snapToInterval={332}
+          decelerationRate="fast"
         />
         
         <View style={styles.actionsContainer}>
@@ -194,6 +206,18 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 20,
   },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+    marginLeft: -8,
+  },
+  backText: {
+    color: colors.primary,
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 4,
+  },
   statsCarousel: {
     flexGrow: 0,
   },
@@ -203,47 +227,47 @@ const styles = StyleSheet.create({
   eventButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 12,
-    marginBottom: 16,
+    gap: 16,
+    marginBottom: 20,
   },
   actionButton: {
-    backgroundColor: colors.blueButton,
-    borderRadius: 16,
-    padding: 18,
+    backgroundColor: colors.primary,
+    borderRadius: 20,
+    padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
   },
   actionButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '700',
     marginLeft: 8,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   modalContent: {
     backgroundColor: colors.card,
-    borderRadius: 20,
+    borderRadius: 24,
     padding: 24,
     width: '100%',
     maxWidth: 400,
     maxHeight: '80%',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 24,
     elevation: 8,
   },
   closeButton: {

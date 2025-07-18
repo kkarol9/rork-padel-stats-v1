@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ShotType, ShotSpecification } from '@/types';
 import { shotTypes, shotSpecifications } from '@/constants/shotTypes';
 import { colors } from '@/constants/colors';
+import { ArrowLeft } from 'lucide-react-native';
 
 type ShotTypeSelectorProps = {
   onSelectComplete: (shotType: ShotType, shotSpecification: ShotSpecification) => void;
@@ -45,7 +46,8 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
           style={styles.backButton}
           onPress={onBack}
         >
-          <Text style={styles.backButtonText}>← Back to player selection</Text>
+          <ArrowLeft size={16} color={colors.primary} />
+          <Text style={styles.backButtonText}>Back to player selection</Text>
         </TouchableOpacity>
       </View>
     );
@@ -78,7 +80,8 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
         style={styles.backButton}
         onPress={() => setSelectedShotType(null)}
       >
-        <Text style={styles.backButtonText}>← Back to shot types</Text>
+        <ArrowLeft size={16} color={colors.primary} />
+        <Text style={styles.backButtonText}>Back to shot types</Text>
       </TouchableOpacity>
     </View>
   );
@@ -86,23 +89,23 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
 
 const styles = StyleSheet.create({
   container: {
-    padding: 4,
+    padding: 8,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '700',
     color: colors.text,
-    marginBottom: 24,
+    marginBottom: 32,
     textAlign: 'center',
   },
   shotTypeList: {
-    gap: 12,
-    marginBottom: 24,
+    gap: 16,
+    marginBottom: 32,
   },
   shotTypeButton: {
-    backgroundColor: colors.background,
-    padding: 20,
-    borderRadius: 12,
+    backgroundColor: colors.lightGray,
+    padding: 24,
+    borderRadius: 16,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -112,16 +115,19 @@ const styles = StyleSheet.create({
   },
   shotTypeName: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '600',
     color: colors.text,
   },
   backButton: {
-    padding: 8,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    padding: 12,
   },
   backButtonText: {
     color: colors.primary,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
+    marginLeft: 8,
   },
 });
