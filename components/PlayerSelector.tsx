@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Player, Team } from '@/types';
 import { colors } from '@/constants/colors';
 
@@ -15,14 +15,7 @@ export default function PlayerSelector({ teams, onSelectPlayer, onBack, title }:
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={onBack}
-      >
-        <Text style={styles.backButtonText}>← Back to event selection</Text>
-      </TouchableOpacity>
-      
-      <View style={styles.teamContainer}>
+      <View style={styles.teamSection}>
         <Text style={styles.teamLabel}>Team 1</Text>
         <View style={styles.playerList}>
           {teams[0].players.map((player) => (
@@ -31,13 +24,13 @@ export default function PlayerSelector({ teams, onSelectPlayer, onBack, title }:
               style={styles.playerButton}
               onPress={() => onSelectPlayer(player.id)}
             >
-              <Text style={styles.playerName}>{player.name}</Text>
+              <Text style={styles.playerName}>{player.name.split(' ')[0]}</Text>
             </TouchableOpacity>
           ))}
         </View>
       </View>
       
-      <View style={styles.teamContainer}>
+      <View style={styles.teamSection}>
         <Text style={styles.teamLabel}>Team 2</Text>
         <View style={styles.playerList}>
           {teams[1].players.map((player) => (
@@ -46,7 +39,7 @@ export default function PlayerSelector({ teams, onSelectPlayer, onBack, title }:
               style={styles.playerButton}
               onPress={() => onSelectPlayer(player.id)}
             >
-              <Text style={styles.playerName}>{player.name}</Text>
+              <Text style={styles.playerName}>{player.name.split(' ')[0]}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -57,51 +50,40 @@ export default function PlayerSelector({ teams, onSelectPlayer, onBack, title }:
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
+    padding: 4,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: colors.text,
-    marginBottom: 16,
+    marginBottom: 24,
     textAlign: 'center',
   },
-  backButton: {
-    marginBottom: 16,
-    padding: 8,
-  },
-  backButtonText: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  teamContainer: {
-    marginBottom: 16,
+  teamSection: {
+    marginBottom: 24,
   },
   teamLabel: {
     fontSize: 16,
     fontWeight: '600',
     color: colors.textLight,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   playerList: {
-    gap: 8,
+    gap: 12,
   },
   playerButton: {
     backgroundColor: colors.background,
-    padding: 16,
-    borderRadius: 8,
+    padding: 20,
+    borderRadius: 12,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
     elevation: 1,
   },
   playerName: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '500',
     color: colors.text,
   },

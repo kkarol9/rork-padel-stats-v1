@@ -11,18 +11,17 @@ type ScoreDisplayProps = {
 export default function ScoreDisplay({ score, teams }: ScoreDisplayProps) {
   return (
     <View style={styles.container}>
-      <View style={styles.scoreHeader}>
-        <Text style={styles.headerText}>Sets</Text>
-        <Text style={styles.headerText}>Games</Text>
-        <Text style={styles.headerText}>Points</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.teamsHeader}>Teams</Text>
+        <Text style={styles.columnHeader}>Sets</Text>
+        <Text style={styles.columnHeader}>Games</Text>
+        <Text style={styles.columnHeader}>Points</Text>
       </View>
       
-      <View style={styles.teamScoreRow}>
-        <View style={styles.teamNameContainer}>
-          <Text style={styles.teamName} numberOfLines={1} ellipsizeMode="tail">
-            {teams[0].players.map(p => p.name.split(' ')[0]).join('/')}
-          </Text>
-        </View>
+      <View style={styles.scoreRow}>
+        <Text style={styles.teamName}>
+          {teams[0].players.map(p => p.name.split(' ')[0]).join(' & ')}
+        </Text>
         <Text style={styles.scoreValue}>{score.sets[0]}</Text>
         <Text style={styles.scoreValue}>{score.games[0]}</Text>
         <Text style={styles.scoreValue}>
@@ -30,12 +29,10 @@ export default function ScoreDisplay({ score, teams }: ScoreDisplayProps) {
         </Text>
       </View>
       
-      <View style={styles.teamScoreRow}>
-        <View style={styles.teamNameContainer}>
-          <Text style={styles.teamName} numberOfLines={1} ellipsizeMode="tail">
-            {teams[1].players.map(p => p.name.split(' ')[0]).join('/')}
-          </Text>
-        </View>
+      <View style={styles.scoreRow}>
+        <Text style={styles.teamName}>
+          {teams[1].players.map(p => p.name.split(' ')[0]).join(' & ')}
+        </Text>
         <Text style={styles.scoreValue}>{score.sets[1]}</Text>
         <Text style={styles.scoreValue}>{score.games[1]}</Text>
         <Text style={styles.scoreValue}>
@@ -57,55 +54,60 @@ export default function ScoreDisplay({ score, teams }: ScoreDisplayProps) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 16,
+    padding: 20,
     marginHorizontal: 16,
-    marginVertical: 8,
+    marginTop: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  scoreHeader: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginBottom: 8,
-    paddingRight: 8,
-  },
-  headerText: {
-    width: 60,
-    textAlign: 'center',
-    fontSize: 14,
-    color: colors.textLight,
-    fontWeight: '500',
-  },
-  teamScoreRow: {
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 4,
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
-  teamNameContainer: {
+  teamsHeader: {
     flex: 1,
-    marginRight: 8,
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.textLight,
+  },
+  columnHeader: {
+    width: 60,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.textLight,
+  },
+  scoreRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
   },
   teamName: {
-    fontSize: 16,
+    flex: 1,
+    fontSize: 18,
     fontWeight: '600',
     color: colors.text,
   },
   scoreValue: {
     width: 60,
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: colors.text,
   },
   tiebreakIndicator: {
-    marginTop: 8,
-    padding: 6,
+    marginTop: 12,
+    padding: 8,
     backgroundColor: colors.primary + '20',
-    borderRadius: 6,
+    borderRadius: 8,
     alignItems: 'center',
   },
   tiebreakText: {

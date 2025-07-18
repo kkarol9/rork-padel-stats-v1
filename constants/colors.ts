@@ -1,13 +1,21 @@
 export const colors = {
-  primary: '#3498db',
-  secondary: '#e74c3c',
-  accent: '#2ecc71',
-  background: '#f8f9fa',
-  card: '#ffffff',
-  text: '#2c3e50',
-  textLight: '#7f8c8d',
-  border: '#e0e0e0',
-  error: '#e74c3c',
-  success: '#2ecc71',
-  warning: '#f39c12',
+  primary: '#007AFF',
+  secondary: '#FF3B30',
+  accent: '#34C759',
+  background: '#F2F2F7',
+  card: '#FFFFFF',
+  text: '#000000',
+  textLight: '#8E8E93',
+  border: '#C6C6C8',
+  error: '#FF3B30',
+  success: '#34C759',
+  warning: '#FF9500',
+  
+  // Event colors to match screenshots
+  unforcedError: '#FF6B6B',
+  winner: '#4ECDC4',
+  forcedError: '#FFE66D',
+  
+  // Button colors
+  blueButton: '#5A67D8',
 };

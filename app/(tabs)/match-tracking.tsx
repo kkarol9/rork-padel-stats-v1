@@ -9,7 +9,7 @@ import EventButton from '@/components/EventButton';
 import PlayerSelector from '@/components/PlayerSelector';
 import ShotTypeSelector from '@/components/ShotTypeSelector';
 import PlayerStatsCard from '@/components/PlayerStatsCard';
-import { X, BarChart3, RotateCcw, Flag } from 'lucide-react-native';
+import { X, BarChart3, RotateCcw } from 'lucide-react-native';
 
 export default function MatchTracking() {
   const router = useRouter();
@@ -80,23 +80,6 @@ export default function MatchTracking() {
     router.push('/match-statistics');
   };
   
-  const handleEndMatch = () => {
-    Alert.alert(
-      'End Match',
-      'Are you sure you want to end this match?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'End Match', 
-          onPress: () => {
-            completeMatch();
-            router.push('/match-statistics');
-          } 
-        },
-      ]
-    );
-  };
-  
   const handleCloseModal = () => {
     setModalVisible(false);
     setSelectedEventType(null);
@@ -118,23 +101,22 @@ export default function MatchTracking() {
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
         <ScoreDisplay score={currentMatch.score} teams={currentMatch.teams} />
         
-        <View style={styles.statsSection}>
-          <FlatList
-            ref={flatListRef}
-            data={allPlayers}
-            renderItem={renderPlayerStatsCard}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled
-            onMomentumScrollEnd={(e) => {
-              const index = Math.round(e.nativeEvent.contentOffset.x / 316);
-              setCurrentPlayerIndex(index);
-            }}
-          />
-        </View>
+        <FlatList
+          ref={flatListRef}
+          data={allPlayers}
+          renderItem={renderPlayerStatsCard}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          onMomentumScrollEnd={(e) => {
+            const index = Math.round(e.nativeEvent.contentOffset.x / 316);
+            setCurrentPlayerIndex(index);
+          }}
+          style={styles.statsCarousel}
+        />
         
-        <View style={styles.eventButtonsContainer}>
+        <View style={styles.actionsContainer}>
           <View style={styles.eventButtons}>
             <EventButton 
               eventType="unforced_error" 
@@ -151,27 +133,19 @@ export default function MatchTracking() {
           </View>
 
           <TouchableOpacity 
-            style={styles.undoButton}
+            style={styles.actionButton}
             onPress={handleUndo}
           >
             <RotateCcw size={20} color="white" />
-            <Text style={styles.undoButtonText}>Undo Last Point</Text>
+            <Text style={styles.actionButtonText}>Undo Last Point</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={styles.viewStatsButton}
+            style={styles.actionButton}
             onPress={handleViewStatistics}
           >
             <BarChart3 size={20} color="white" />
-            <Text style={styles.viewStatsButtonText}>View Statistics</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.endMatchButton}
-            onPress={handleEndMatch}
-          >
-            <Flag size={20} color={colors.error} />
-            <Text style={styles.endMatchButtonText}>End Match</Text>
+            <Text style={styles.actionButtonText}>View Statistics</Text>
           </TouchableOpacity>
         </View>
         
@@ -187,7 +161,7 @@ export default function MatchTracking() {
                 style={styles.closeButton}
                 onPress={handleCloseModal}
               >
-                <X size={24} color={colors.text} />
+                <X size={24} color={colors.textLight} />
               </TouchableOpacity>
               
               {!selectedPlayerId ? (
@@ -220,18 +194,10 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 20,
   },
-  statsSection: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    margin: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
+  statsCarousel: {
+    flexGrow: 0,
   },
-  eventButtonsContainer: {
+  actionsContainer: {
     padding: 16,
   },
   eventButtons: {
@@ -240,63 +206,22 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 16,
   },
-  undoButton: {
-    backgroundColor: '#5865F2',
-    borderRadius: 12,
-    padding: 16,
+  actionButton: {
+    backgroundColor: colors.blueButton,
+    borderRadius: 16,
+    padding: 18,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
     elevation: 3,
   },
-  undoButtonText: {
+  actionButtonText: {
     color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  viewStatsButton: {
-    backgroundColor: '#5865F2',
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  viewStatsButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  endMatchButton: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: colors.error,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  endMatchButtonText: {
-    color: colors.error,
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 8,
@@ -310,19 +235,22 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: colors.card,
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: 20,
+    padding: 24,
     width: '100%',
+    maxWidth: 400,
     maxHeight: '80%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 8,
   },
   closeButton: {
     alignSelf: 'flex-end',
     padding: 8,
     marginBottom: 8,
+    marginTop: -8,
+    marginRight: -8,
   },
 });

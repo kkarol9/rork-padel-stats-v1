@@ -24,20 +24,22 @@ export default function PlayerStatsCard({ match, player }: PlayerStatsCardProps)
   
   return (
     <View style={styles.container}>
-      <Text style={styles.playerName}>{player.name}</Text>
+      <Text style={styles.sectionTitle}>Match Stats</Text>
       
-      <View style={styles.statsRow}>
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{winners}</Text>
+      <View style={styles.statsGrid}>
+        <View style={styles.statCard}>
+          <Text style={styles.statNumber}>{winners}</Text>
           <Text style={styles.statLabel}>Winners</Text>
         </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{unforcedErrors}</Text>
-          <Text style={styles.statLabel}>Unforced Errors</Text>
+        
+        <View style={styles.statCard}>
+          <Text style={styles.statNumber}>{unforcedErrors}</Text>
+          <Text style={styles.statLabel}>Unforced{'\n'}Errors</Text>
         </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{forcedErrors}</Text>
-          <Text style={styles.statLabel}>Forced Errors</Text>
+        
+        <View style={styles.statCard}>
+          <Text style={styles.statNumber}>{forcedErrors}</Text>
+          <Text style={styles.statLabel}>Forced{'\n'}Errors</Text>
         </View>
       </View>
     </View>
@@ -47,39 +49,46 @@ export default function PlayerStatsCard({ match, player }: PlayerStatsCardProps)
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 8,
-    width: 300,
+    borderRadius: 16,
+    padding: 20,
+    marginHorizontal: 16,
+    marginTop: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  playerName: {
-    fontSize: 18,
+  sectionTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
     color: colors.text,
-    marginBottom: 12,
+    marginBottom: 20,
   },
-  statsRow: {
+  statsGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 12,
   },
-  statItem: {
-    alignItems: 'center',
+  statCard: {
     flex: 1,
+    backgroundColor: colors.background,
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 80,
   },
-  statValue: {
-    fontSize: 24,
+  statNumber: {
+    fontSize: 32,
     fontWeight: 'bold',
-    color: colors.primary,
+    color: colors.text,
+    marginBottom: 4,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: 14,
     color: colors.textLight,
     textAlign: 'center',
-    marginTop: 4,
+    lineHeight: 18,
   },
 });

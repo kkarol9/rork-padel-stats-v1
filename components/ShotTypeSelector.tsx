@@ -29,13 +29,6 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
         
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={onBack}
-        >
-          <Text style={styles.backButtonText}>← Back to player selection</Text>
-        </TouchableOpacity>
-        
         <View style={styles.shotTypeList}>
           {shotTypes.map((shot) => (
             <TouchableOpacity
@@ -47,6 +40,13 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
             </TouchableOpacity>
           ))}
         </View>
+        
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={onBack}
+        >
+          <Text style={styles.backButtonText}>← Back to player selection</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -62,13 +62,6 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
         {selectedShotType === 'smash' ? 'What type of smash?' : 'Forehand or Backhand?'}
       </Text>
       
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => setSelectedShotType(null)}
-      >
-        <Text style={styles.backButtonText}>← Back to shot types</Text>
-      </TouchableOpacity>
-      
       <View style={styles.shotTypeList}>
         {specifications.map((spec) => (
           <TouchableOpacity
@@ -80,49 +73,55 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
           </TouchableOpacity>
         ))}
       </View>
+      
+      <TouchableOpacity 
+        style={styles.backButton}
+        onPress={() => setSelectedShotType(null)}
+      >
+        <Text style={styles.backButtonText}>← Back to shot types</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
+    padding: 4,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: colors.text,
-    marginBottom: 16,
+    marginBottom: 24,
     textAlign: 'center',
   },
   shotTypeList: {
     gap: 12,
+    marginBottom: 24,
   },
   shotTypeButton: {
     backgroundColor: colors.background,
-    padding: 16,
-    borderRadius: 8,
+    padding: 20,
+    borderRadius: 12,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
     elevation: 1,
   },
   shotTypeName: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '500',
     color: colors.text,
   },
   backButton: {
-    marginBottom: 16,
     padding: 8,
+    alignItems: 'center',
   },
   backButtonText: {
     color: colors.primary,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '500',
   },
 });
