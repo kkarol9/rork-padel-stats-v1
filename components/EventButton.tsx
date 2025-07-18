@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { EventType } from '@/types';
+import { eventTypes } from '@/constants/shotTypes';
 import { colors } from '@/constants/colors';
 
 type EventButtonProps = {
@@ -9,62 +10,40 @@ type EventButtonProps = {
 };
 
 export default function EventButton({ eventType, onPress }: EventButtonProps) {
-  const getButtonStyle = () => {
-    switch (eventType) {
-      case 'unforced_error':
-        return { backgroundColor: colors.unforcedError };
-      case 'winner':
-        return { backgroundColor: colors.winner };
-      case 'forced_error':
-        return { backgroundColor: colors.forcedError };
-      default:
-        return { backgroundColor: colors.primary };
-    }
-  };
-
-  const getButtonText = () => {
-    switch (eventType) {
-      case 'unforced_error':
-        return 'Unforced\nError';
-      case 'winner':
-        return 'Winner';
-      case 'forced_error':
-        return 'Forced\nError';
-      default:
-        return eventType;
-    }
-  };
+  const eventInfo = eventTypes.find(e => e.id === eventType);
+  
+  if (!eventInfo) return null;
   
   return (
     <TouchableOpacity 
-      style={[styles.button, getButtonStyle()]}
+      style={[styles.button, { backgroundColor: eventInfo.color }]}
       onPress={onPress}
     >
-      <Text style={styles.buttonText}>{getButtonText()}</Text>
+      <Text style={styles.buttonText}>{eventInfo.label}</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    flex: 1,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-    borderRadius: 20,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
     elevation: 3,
-    minHeight: 80,
+    flex: 1,
+    minHeight: 60,
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 14,
+    fontWeight: 'bold',
     textAlign: 'center',
-    lineHeight: 20,
+    lineHeight: 18,
   },
 });

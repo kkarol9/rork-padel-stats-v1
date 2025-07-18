@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ShotType, ShotSpecification } from '@/types';
 import { shotTypes, shotSpecifications } from '@/constants/shotTypes';
 import { colors } from '@/constants/colors';
-import { ArrowLeft } from 'lucide-react-native';
 
 type ShotTypeSelectorProps = {
   onSelectComplete: (shotType: ShotType, shotSpecification: ShotSpecification) => void;
@@ -30,6 +29,13 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
         
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={onBack}
+        >
+          <Text style={styles.backButtonText}>← Back to player selection</Text>
+        </TouchableOpacity>
+        
         <View style={styles.shotTypeList}>
           {shotTypes.map((shot) => (
             <TouchableOpacity
@@ -41,14 +47,6 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
             </TouchableOpacity>
           ))}
         </View>
-        
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={onBack}
-        >
-          <ArrowLeft size={16} color={colors.primary} />
-          <Text style={styles.backButtonText}>Back to player selection</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -64,6 +62,13 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
         {selectedShotType === 'smash' ? 'What type of smash?' : 'Forehand or Backhand?'}
       </Text>
       
+      <TouchableOpacity 
+        style={styles.backButton}
+        onPress={() => setSelectedShotType(null)}
+      >
+        <Text style={styles.backButtonText}>← Back to shot types</Text>
+      </TouchableOpacity>
+      
       <View style={styles.shotTypeList}>
         {specifications.map((spec) => (
           <TouchableOpacity
@@ -75,59 +80,49 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
           </TouchableOpacity>
         ))}
       </View>
-      
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => setSelectedShotType(null)}
-      >
-        <ArrowLeft size={16} color={colors.primary} />
-        <Text style={styles.backButtonText}>Back to shot types</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 8,
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: 'bold',
     color: colors.text,
-    marginBottom: 32,
+    marginBottom: 16,
     textAlign: 'center',
   },
   shotTypeList: {
-    gap: 16,
-    marginBottom: 32,
+    gap: 12,
   },
   shotTypeButton: {
-    backgroundColor: colors.lightGray,
-    padding: 24,
-    borderRadius: 16,
+    backgroundColor: colors.background,
+    padding: 16,
+    borderRadius: 8,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
     elevation: 1,
   },
   shotTypeName: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '500',
     color: colors.text,
   },
   backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 12,
+    marginBottom: 16,
+    padding: 8,
   },
   backButtonText: {
     color: colors.primary,
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 8,
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
