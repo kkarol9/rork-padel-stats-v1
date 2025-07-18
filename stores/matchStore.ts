@@ -9,6 +9,7 @@ interface MatchState {
   matches: Match[];
   createMatch: (teams: [Team, Team], location: string, round: string) => void;
   addEvent: (playerId: string, eventType: EventType, shotType: ShotType, shotSpecification: ShotSpecification) => void;
+  undoLastEvent: () => void;
   updateMatchScore: (teamIndex: 0 | 1) => void;
   completeMatch: () => void;
   resetCurrentMatch: () => void;
@@ -80,6 +81,48 @@ export const useMatchStore = create<MatchState>()(
         if (updatedMatch && isMatchCompleted(updatedMatch.score)) {
           get().completeMatch();
         }
+      },
+
+      undoLastEvent: () => {
+        const { currentMatch } = get();
+        if (!currentMatch || currentMatch.events.length === 0) return;
+
+        // Remove the last event
+        const eventsWithoutLast = currentMatch.events.slice(0, -1);
+        
+        // Recalculate score from scratch
+        let newScore = getInitialScore();
+        
+        for (const event of eventsWithoutLast) {
+          // Find which team scored based on the event type
+          let scoringTeamIndex: 0 | 1 | null = null;
+          
+          // Find which team the player belongs to
+          const team0HasPlayer = currentMatch.teams[0].players.some(p => p.id === event.playerId);
+          const playerTeamIndex = team0HasPlayer ? 0 : 1;
+          const opposingTeamIndex = playerTeamIndex === 0 ? 1 : 0;
+          
+          // Determine which team scores a point based on event type
+          if (event.eventType === 'winner') {
+            scoringTeamIndex = playerTeamIndex;
+          } else if (event.eventType === 'unforced_error' || event.eventType === 'forced_error') {
+            scoringTeamIndex = opposingTeamIndex;
+          }
+          
+          if (scoringTeamIndex !== null) {
+            newScore = updateScore(newScore, scoringTeamIndex);
+          }
+        }
+
+        set(state => ({
+          currentMatch: {
+            ...state.currentMatch!,
+            events: eventsWithoutLast,
+            score: newScore,
+            isCompleted: false,
+            winner: undefined,
+          }
+        }));
       },
       
       updateMatchScore: (teamIndex: 0 | 1) => {

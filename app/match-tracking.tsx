@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, ScrollView, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, FlatList } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
@@ -10,11 +10,11 @@ import EventButton from '@/components/EventButton';
 import PlayerSelector from '@/components/PlayerSelector';
 import ShotTypeSelector from '@/components/ShotTypeSelector';
 import PlayerStatsCard from '@/components/PlayerStatsCard';
-import { X, Save, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { X, BarChart3, RotateCcw, Flag } from 'lucide-react-native';
 
 export default function MatchTracking() {
   const router = useRouter();
-  const { currentMatch, addEvent, completeMatch } = useMatchStore();
+  const { currentMatch, addEvent, undoLastEvent, completeMatch } = useMatchStore();
   
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEventType, setSelectedEventType] = useState<EventType | null>(null);
@@ -49,15 +49,42 @@ export default function MatchTracking() {
       setSelectedPlayerId(null);
     }
   };
-  
-  const handleFinishMatch = () => {
+
+  const handleUndo = () => {
+    if (currentMatch.events.length === 0) {
+      Alert.alert('No Events', 'There are no events to undo.');
+      return;
+    }
+
     Alert.alert(
-      'Finish Match',
-      'Are you sure you want to finish this match?',
+      'Undo Last Point',
+      'Are you sure you want to undo the last point?',
       [
         { text: 'Cancel', style: 'cancel' },
         { 
-          text: 'Finish', 
+          text: 'Undo', 
+          onPress: () => undoLastEvent(),
+          style: 'destructive'
+        },
+      ]
+    );
+  };
+
+  const handleViewStatistics = () => {
+    router.push({
+      pathname: '/match-statistics',
+      params: { matchId: currentMatch.id }
+    });
+  };
+  
+  const handleEndMatch = () => {
+    Alert.alert(
+      'End Match',
+      'Are you sure you want to end this match?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'End Match', 
           onPress: () => {
             completeMatch();
             router.replace({
@@ -76,20 +103,6 @@ export default function MatchTracking() {
     setSelectedPlayerId(null);
   };
   
-  const scrollToNextPlayer = () => {
-    if (currentPlayerIndex < allPlayers.length - 1) {
-      flatListRef.current?.scrollToIndex({ index: currentPlayerIndex + 1, animated: true });
-      setCurrentPlayerIndex(currentPlayerIndex + 1);
-    }
-  };
-  
-  const scrollToPreviousPlayer = () => {
-    if (currentPlayerIndex > 0) {
-      flatListRef.current?.scrollToIndex({ index: currentPlayerIndex - 1, animated: true });
-      setCurrentPlayerIndex(currentPlayerIndex - 1);
-    }
-  };
-  
   const renderPlayerStatsCard = ({ item }: { item: Player }) => (
     <PlayerStatsCard match={currentMatch} player={item} />
   );
@@ -99,37 +112,14 @@ export default function MatchTracking() {
       <Stack.Screen 
         options={{ 
           title: 'Match Tracking',
-          headerRight: () => (
-            <TouchableOpacity onPress={handleFinishMatch}>
-              <Save size={24} color={colors.primary} />
-            </TouchableOpacity>
-          ),
         }} 
       />
       
       <SafeAreaView style={styles.container} edges={['bottom']}>
         <ScoreDisplay score={currentMatch.score} teams={currentMatch.teams} />
         
-        <View style={styles.statsPreview}>
-          <View style={styles.statsHeader}>
-            <Text style={styles.statsTitle}>Player Stats</Text>
-            <View style={styles.playerNavigation}>
-              <TouchableOpacity 
-                style={[styles.navButton, currentPlayerIndex === 0 && styles.navButtonDisabled]}
-                onPress={scrollToPreviousPlayer}
-                disabled={currentPlayerIndex === 0}
-              >
-                <ChevronLeft size={20} color={currentPlayerIndex === 0 ? colors.textLight : colors.primary} />
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[styles.navButton, currentPlayerIndex === allPlayers.length - 1 && styles.navButtonDisabled]}
-                onPress={scrollToNextPlayer}
-                disabled={currentPlayerIndex === allPlayers.length - 1}
-              >
-                <ChevronRight size={20} color={currentPlayerIndex === allPlayers.length - 1 ? colors.textLight : colors.primary} />
-              </TouchableOpacity>
-            </View>
-          </View>
+        <View style={styles.statsSection}>
+          <Text style={styles.statsTitle}>Match Stats</Text>
           
           <FlatList
             ref={flatListRef}
@@ -140,14 +130,13 @@ export default function MatchTracking() {
             showsHorizontalScrollIndicator={false}
             pagingEnabled
             onMomentumScrollEnd={(e) => {
-              const index = Math.round(e.nativeEvent.contentOffset.x / 316); // 300 width + 16 margin
+              const index = Math.round(e.nativeEvent.contentOffset.x / 316);
               setCurrentPlayerIndex(index);
             }}
           />
         </View>
         
         <View style={styles.eventButtonsContainer}>
-          <Text style={styles.eventButtonsTitle}>Record Event</Text>
           <View style={styles.eventButtons}>
             <EventButton 
               eventType="unforced_error" 
@@ -162,6 +151,30 @@ export default function MatchTracking() {
               onPress={() => handleEventButtonPress('forced_error')} 
             />
           </View>
+
+          <TouchableOpacity 
+            style={styles.undoButton}
+            onPress={handleUndo}
+          >
+            <RotateCcw size={20} color="white" />
+            <Text style={styles.undoButtonText}>Undo Last Point</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.viewStatsButton}
+            onPress={handleViewStatistics}
+          >
+            <BarChart3 size={20} color="white" />
+            <Text style={styles.viewStatsButtonText}>View Statistics</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.endMatchButton}
+            onPress={handleEndMatch}
+          >
+            <Flag size={20} color={colors.text} />
+            <Text style={styles.endMatchButtonText}>End Match</Text>
+          </TouchableOpacity>
         </View>
         
         <Modal
@@ -206,7 +219,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  statsPreview: {
+  statsSection: {
     backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
@@ -217,41 +230,73 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
-  statsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
   statsTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: colors.text,
-  },
-  playerNavigation: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  navButton: {
-    padding: 8,
-  },
-  navButtonDisabled: {
-    opacity: 0.5,
+    marginBottom: 12,
   },
   eventButtonsContainer: {
     padding: 16,
     flex: 1,
   },
-  eventButtonsTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: 16,
-  },
   eventButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 12,
+    marginBottom: 16,
+  },
+  undoButton: {
+    backgroundColor: '#5865F2',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  undoButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  viewStatsButton: {
+    backgroundColor: '#5865F2',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  viewStatsButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  endMatchButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  endMatchButtonText: {
+    color: colors.text,
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
   },
   modalOverlay: {
     flex: 1,
