@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
@@ -104,103 +104,113 @@ export default function NewMatch() {
   
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <ScrollView>
-        <View style={styles.header}>
-          <Text style={styles.title}>New Match</Text>
-          <Text style={styles.subtitle}>Enter match details to start tracking</Text>
-        </View>
-        
-        <View style={styles.matchDetailsSection}>
-          <Text style={styles.sectionTitle}>Match Details</Text>
-          
-          <View style={styles.inputContainer}>
-            <MapPin size={20} color={colors.textLight} style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Location (e.g. Club Name)"
-              value={location}
-              onChangeText={setLocation}
-              placeholderTextColor={colors.textLight}
-            />
-          </View>
-          
-          <View style={styles.inputContainer}>
-            <Trophy size={20} color={colors.textLight} style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Round (e.g. Finals, Semifinals)"
-              value={round}
-              onChangeText={setRound}
-              placeholderTextColor={colors.textLight}
-            />
-          </View>
-        </View>
-        
-        <View style={styles.teamSection}>
-          <View style={styles.teamHeader}>
-            <Users size={20} color={colors.primary} />
-            <Text style={styles.teamTitle}>Team 1</Text>
-          </View>
-          
-          <View style={styles.inputContainer}>
-            <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Player 1 Name"
-              value={team1Player1}
-              onChangeText={setTeam1Player1}
-              placeholderTextColor={colors.textLight}
-            />
-          </View>
-          
-          <View style={styles.inputContainer}>
-            <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Player 2 Name"
-              value={team1Player2}
-              onChangeText={setTeam1Player2}
-              placeholderTextColor={colors.textLight}
-            />
-          </View>
-        </View>
-        
-        <View style={styles.teamSection}>
-          <View style={styles.teamHeader}>
-            <Users size={20} color={colors.secondary} />
-            <Text style={styles.teamTitle}>Team 2</Text>
-          </View>
-          
-          <View style={styles.inputContainer}>
-            <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Player 1 Name"
-              value={team2Player1}
-              onChangeText={setTeam2Player1}
-              placeholderTextColor={colors.textLight}
-            />
-          </View>
-          
-          <View style={styles.inputContainer}>
-            <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Player 2 Name"
-              value={team2Player2}
-              onChangeText={setTeam2Player2}
-              placeholderTextColor={colors.textLight}
-            />
-          </View>
-        </View>
-        
-        <TouchableOpacity 
-          style={styles.startButton}
-          onPress={handleStartMatch}
+      <KeyboardAvoidingView 
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+      >
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.startButtonText}>Start Match</Text>
-        </TouchableOpacity>
-      </ScrollView>
+          <View style={styles.header}>
+            <Text style={styles.title}>New Match</Text>
+            <Text style={styles.subtitle}>Enter match details to start tracking</Text>
+          </View>
+          
+          <View style={styles.matchDetailsSection}>
+            <Text style={styles.sectionTitle}>Match Details</Text>
+            
+            <View style={styles.inputContainer}>
+              <MapPin size={20} color={colors.textLight} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Location (e.g. Club Name)"
+                value={location}
+                onChangeText={setLocation}
+                placeholderTextColor={colors.textLight}
+              />
+            </View>
+            
+            <View style={styles.inputContainer}>
+              <Trophy size={20} color={colors.textLight} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Round (e.g. Finals, Semifinals)"
+                value={round}
+                onChangeText={setRound}
+                placeholderTextColor={colors.textLight}
+              />
+            </View>
+          </View>
+          
+          <View style={styles.teamSection}>
+            <View style={styles.teamHeader}>
+              <Users size={20} color={colors.primary} />
+              <Text style={styles.teamTitle}>Team 1</Text>
+            </View>
+            
+            <View style={styles.inputContainer}>
+              <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Player 1 Name"
+                value={team1Player1}
+                onChangeText={setTeam1Player1}
+                placeholderTextColor={colors.textLight}
+              />
+            </View>
+            
+            <View style={styles.inputContainer}>
+              <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Player 2 Name"
+                value={team1Player2}
+                onChangeText={setTeam1Player2}
+                placeholderTextColor={colors.textLight}
+              />
+            </View>
+          </View>
+          
+          <View style={styles.teamSection}>
+            <View style={styles.teamHeader}>
+              <Users size={20} color={colors.secondary} />
+              <Text style={styles.teamTitle}>Team 2</Text>
+            </View>
+            
+            <View style={styles.inputContainer}>
+              <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Player 1 Name"
+                value={team2Player1}
+                onChangeText={setTeam2Player1}
+                placeholderTextColor={colors.textLight}
+              />
+            </View>
+            
+            <View style={styles.inputContainer}>
+              <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Player 2 Name"
+                value={team2Player2}
+                onChangeText={setTeam2Player2}
+                placeholderTextColor={colors.textLight}
+              />
+            </View>
+          </View>
+          
+          <TouchableOpacity 
+            style={styles.startButton}
+            onPress={handleStartMatch}
+          >
+            <Text style={styles.startButtonText}>Start Match</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -209,6 +219,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 40,
   },
   header: {
     padding: 16,

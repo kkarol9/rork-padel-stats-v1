@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, FlatList, ScrollView } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
@@ -23,8 +23,14 @@ export default function MatchTracking() {
   const flatListRef = useRef<FlatList>(null);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   
-  if (!currentMatch) {
-    router.replace('/');
+  // Check if there's no current match or match is completed
+  useEffect(() => {
+    if (!currentMatch || currentMatch.isCompleted) {
+      router.replace('/new-match');
+    }
+  }, [currentMatch, router]);
+  
+  if (!currentMatch || currentMatch.isCompleted) {
     return null;
   }
   
