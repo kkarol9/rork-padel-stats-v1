@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, FlatList, ScrollView } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
@@ -9,7 +9,8 @@ import EventButton from '@/components/EventButton';
 import PlayerSelector from '@/components/PlayerSelector';
 import ShotTypeSelector from '@/components/ShotTypeSelector';
 import PlayerStatsCard from '@/components/PlayerStatsCard';
-import { X, BarChart3, RotateCcw, Flag } from 'lucide-react-native';
+import { X, BarChart3, RotateCcw, Flag, PlusCircle, Play } from 'lucide-react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MatchTracking() {
   const router = useRouter();
@@ -23,15 +24,35 @@ export default function MatchTracking() {
   const flatListRef = useRef<FlatList>(null);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   
-  // Check if there's no current match or match is completed
-  useEffect(() => {
-    if (!currentMatch || currentMatch.isCompleted) {
-      router.replace('/new-match');
-    }
-  }, [currentMatch, router]);
-  
+  // If there's no current match or match is completed, show empty state
   if (!currentMatch || currentMatch.isCompleted) {
-    return null;
+    return (
+      <>
+        <Stack.Screen 
+          options={{ 
+            title: 'Match Tracking',
+          }} 
+        />
+        
+        <SafeAreaView style={styles.container} edges={['bottom']}>
+          <View style={styles.emptyStateContainer}>
+            <Play size={64} color={colors.textLight} />
+            <Text style={styles.emptyTitle}>No Active Match</Text>
+            <Text style={styles.emptyMessage}>
+              You don't have any active match to track. Start a new match to begin tracking statistics.
+            </Text>
+            
+            <TouchableOpacity 
+              style={styles.startNewMatchButton}
+              onPress={() => router.push('/new-match')}
+            >
+              <PlusCircle size={20} color="white" />
+              <Text style={styles.startNewMatchText}>Start New Match</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </>
+    );
   }
   
   // Get all players from both teams
@@ -218,6 +239,45 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 20,
+  },
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  emptyTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyMessage: {
+    fontSize: 16,
+    color: colors.textLight,
+    textAlign: 'center',
+    marginBottom: 32,
+    lineHeight: 22,
+  },
+  startNewMatchButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    padding: 16,
+    paddingHorizontal: 32,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  startNewMatchText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
   statsSection: {
     backgroundColor: colors.card,
