@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native
 import { useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
+import { Match, Player } from '@/types';
 import { BarChart2, MapPin, Info } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,7 +11,7 @@ export default function MatchHistory() {
   const router = useRouter();
   const { matches } = useMatchStore();
   
-  const renderMatchItem = ({ item: match }) => (
+  const renderMatchItem = ({ item: match }: { item: Match }) => (
     <TouchableOpacity 
       style={styles.matchItem}
       onPress={() => router.push({
@@ -20,7 +21,7 @@ export default function MatchHistory() {
     >
       <View>
         <Text style={styles.matchTeams}>
-          {match.teams[0].players.map(p => p.name.split(' ')[0]).join('/')} vs {match.teams[1].players.map(p => p.name.split(' ')[0]).join('/')}
+          {match.teams[0].players.map((p: Player) => p.name.split(' ')[0]).join('/')} vs {match.teams[1].players.map((p: Player) => p.name.split(' ')[0]).join('/')}
         </Text>
         <View style={styles.matchDetails}>
           <MapPin size={14} color={colors.textLight} />
