@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native
 import { useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
-import { BarChart2, MapPin } from 'lucide-react-native';
+import { BarChart2, MapPin, Info } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MatchHistory() {
@@ -48,7 +48,12 @@ export default function MatchHistory() {
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <View style={styles.header}>
         <Text style={styles.title}>Match History</Text>
-        <Text style={styles.subtitle}>View your past matches</Text>
+        <TouchableOpacity 
+          style={styles.aboutButton}
+          onPress={() => router.push('/about')}
+        >
+          <Info size={24} color={colors.primary} />
+        </TouchableOpacity>
       </View>
       
       {matches.length > 0 ? (
@@ -82,6 +87,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 16,
     marginBottom: 8,
   },
@@ -90,10 +98,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
   },
-  subtitle: {
-    fontSize: 16,
-    color: colors.textLight,
-    marginTop: 4,
+  aboutButton: {
+    padding: 8,
   },
   listContent: {
     padding: 16,
