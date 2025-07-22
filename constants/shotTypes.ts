@@ -4,21 +4,11 @@ export const shotTypes = [
   { id: 'groundstroke', label: 'Groundstroke' },
   { id: 'lob', label: 'Lob' },
   { id: 'return', label: 'Return' },
-  { id: 'bajada', label: 'Bajada' },
-  { id: 'other', label: 'Other' },
 ];
 
 export const shotSpecifications = {
   smash: [
     { id: 'vibora', label: 'Vibora' },
-    { id: 'bandeja', label: 'Bandeja' },
-    { id: 'rulo', label: 'Rulo' },
-    { id: 'standard', label: 'Standard' },
-    { id: 'other_smash', label: 'Other' },
-  ],
-  other: [
-    { id: 'forehand', label: 'Forehand' },
-    { id: 'backhand', label: 'Backhand' },
     { id: 'smash', label: 'Smash' },
   ],
   default: [

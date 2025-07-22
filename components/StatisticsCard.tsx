@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Match, Player, EventType, ShotType, ShotSpecification, MatchEvent } from '@/types';
+import { Match, Player, EventType, ShotType, ShotSpecification } from '@/types';
 import { colors } from '@/constants/colors';
 
 type StatisticsCardProps = {
@@ -86,7 +86,7 @@ export default function StatisticsCard({ match, player }: StatisticsCardProps) {
   );
 }
 
-function createShotBreakdown(events: MatchEvent[]): ShotBreakdown {
+function createShotBreakdown(events: any[]): ShotBreakdown {
   const breakdown: ShotBreakdown = {};
   
   events.forEach(event => {
@@ -107,13 +107,13 @@ function createShotBreakdown(events: MatchEvent[]): ShotBreakdown {
 }
 
 function renderShotBreakdown(breakdown: ShotBreakdown) {
-  return (Object.entries(breakdown) as [ShotType, { [key in ShotSpecification]?: number }][]).map(([shotType, specifications]) => (
+  return Object.entries(breakdown).map(([shotType, specifications]) => (
     <View key={shotType} style={styles.shotTypeBreakdown}>
-      <Text style={styles.shotTypeLabel}>{formatShotType(shotType)}</Text>
+      <Text style={styles.shotTypeLabel}>{formatShotType(shotType as ShotType)}</Text>
       
-      {(Object.entries(specifications) as [ShotSpecification, number][]).map(([spec, count]) => (
+      {Object.entries(specifications).map(([spec, count]) => (
         <View key={spec} style={styles.specificationRow}>
-          <Text style={styles.specificationLabel}>{formatSpecification(spec)}</Text>
+          <Text style={styles.specificationLabel}>{formatSpecification(spec as ShotSpecification)}</Text>
           <Text style={styles.specificationCount}>{count}</Text>
         </View>
       ))}
@@ -126,10 +126,6 @@ function formatShotType(shotType: ShotType): string {
 }
 
 function formatSpecification(spec: ShotSpecification): string {
-  // Fix the "other_smash" display issue
-  if (spec === 'other_smash') {
-    return 'Other';
-  }
   return spec.charAt(0).toUpperCase() + spec.slice(1);
 }
 

@@ -9,8 +9,8 @@ export type Team = {
 };
 
 export type EventType = 'unforced_error' | 'winner' | 'forced_error';
-export type ShotType = 'smash' | 'volley' | 'groundstroke' | 'lob' | 'return' | 'bajada' | 'other';
-export type ShotSpecification = 'vibora' | 'bandeja' | 'rulo' | 'standard' | 'other_smash' | 'forehand' | 'backhand' | 'smash';
+export type ShotType = 'smash' | 'volley' | 'groundstroke' | 'lob' | 'return';
+export type ShotSpecification = 'vibora' | 'smash' | 'forehand' | 'backhand';
 
 export type MatchEvent = {
   id: string;
