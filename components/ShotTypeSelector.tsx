@@ -54,12 +54,24 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
   // If shot type is selected, show the specification selection
   const specifications = selectedShotType === 'smash' 
     ? shotSpecifications.smash 
+    : selectedShotType === 'other'
+    ? shotSpecifications.other
     : shotSpecifications.default;
+  
+  const getSpecificationTitle = () => {
+    if (selectedShotType === 'smash') {
+      return 'What type of smash?';
+    } else if (selectedShotType === 'other') {
+      return 'What type of shot?';
+    } else {
+      return 'Forehand or Backhand?';
+    }
+  };
   
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        {selectedShotType === 'smash' ? 'What type of smash?' : 'Forehand or Backhand?'}
+        {getSpecificationTitle()}
       </Text>
       
       <TouchableOpacity 
