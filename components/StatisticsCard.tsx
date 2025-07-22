@@ -126,6 +126,10 @@ function formatShotType(shotType: ShotType): string {
 }
 
 function formatSpecification(spec: ShotSpecification): string {
+  // Fix the "other_smash" display issue
+  if (spec === 'other_smash') {
+    return 'Other';
+  }
   return spec.charAt(0).toUpperCase() + spec.slice(1);
 }
 
