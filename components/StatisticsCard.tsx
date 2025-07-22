@@ -107,13 +107,13 @@ function createShotBreakdown(events: any[]): ShotBreakdown {
 }
 
 function renderShotBreakdown(breakdown: ShotBreakdown) {
-  return Object.entries(breakdown).map(([shotType, specifications]) => (
+  return (Object.entries(breakdown) as [ShotType, { [key in ShotSpecification]?: number }][]).map(([shotType, specifications]) => (
     <View key={shotType} style={styles.shotTypeBreakdown}>
-      <Text style={styles.shotTypeLabel}>{formatShotType(shotType as ShotType)}</Text>
+      <Text style={styles.shotTypeLabel}>{formatShotType(shotType)}</Text>
       
-      {Object.entries(specifications).map(([spec, count]) => (
+      {(Object.entries(specifications) as [ShotSpecification, number][]).map(([spec, count]) => (
         <View key={spec} style={styles.specificationRow}>
-          <Text style={styles.specificationLabel}>{formatSpecification(spec as ShotSpecification)}</Text>
+          <Text style={styles.specificationLabel}>{formatSpecification(spec)}</Text>
           <Text style={styles.specificationCount}>{count}</Text>
         </View>
       ))}
