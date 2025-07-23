@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { ShotType, ShotSpecification } from '@/types';
 import { shotTypes, shotSpecifications } from '@/constants/shotTypes';
 import { colors } from '@/constants/colors';
@@ -36,31 +36,44 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
           <Text style={styles.backButtonText}>← Back to player selection</Text>
         </TouchableOpacity>
         
-        <View style={styles.shotTypeList}>
-          {shotTypes.map((shot) => (
-            <TouchableOpacity
-              key={shot.id}
-              style={styles.shotTypeButton}
-              onPress={() => handleShotTypeSelect(shot.id as ShotType)}
-            >
-              <Text style={styles.shotTypeName}>{shot.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+          <View style={styles.shotTypeList}>
+            {shotTypes.map((shot) => (
+              <TouchableOpacity
+                key={shot.id}
+                style={styles.shotTypeButton}
+                onPress={() => handleShotTypeSelect(shot.id as ShotType)}
+              >
+                <Text style={styles.shotTypeName}>{shot.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
       </View>
     );
   }
   
   // If shot type is selected, show the specification selection
-  const specifications = selectedShotType === 'smash' 
-    ? shotSpecifications.smash 
-    : shotSpecifications.default;
+  const specifications = shotSpecifications[selectedShotType] || shotSpecifications.default;
+  
+  const getSpecificationTitle = () => {
+    switch (selectedShotType) {
+      case 'smash':
+        return 'What type of smash?';
+      case 'bajada':
+        return 'Forehand or Backhand bajada?';
+      case 'return':
+        return 'Forehand or Backhand return?';
+      case 'other':
+        return 'What type of other shot?';
+      default:
+        return 'Forehand or Backhand?';
+    }
+  };
   
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        {selectedShotType === 'smash' ? 'What type of smash?' : 'Forehand or Backhand?'}
-      </Text>
+      <Text style={styles.title}>{getSpecificationTitle()}</Text>
       
       <TouchableOpacity 
         style={styles.backButton}
@@ -69,17 +82,19 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
         <Text style={styles.backButtonText}>← Back to shot types</Text>
       </TouchableOpacity>
       
-      <View style={styles.shotTypeList}>
-        {specifications.map((spec) => (
-          <TouchableOpacity
-            key={spec.id}
-            style={styles.shotTypeButton}
-            onPress={() => handleSpecificationSelect(spec.id as ShotSpecification)}
-          >
-            <Text style={styles.shotTypeName}>{spec.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        <View style={styles.shotTypeList}>
+          {specifications.map((spec) => (
+            <TouchableOpacity
+              key={spec.id}
+              style={styles.shotTypeButton}
+              onPress={() => handleSpecificationSelect(spec.id as ShotSpecification)}
+            >
+              <Text style={styles.shotTypeName}>{spec.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -89,6 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
+    maxHeight: '80%',
   },
   title: {
     fontSize: 18,
@@ -96,6 +112,9 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 16,
     textAlign: 'center',
+  },
+  scrollContainer: {
+    maxHeight: 400,
   },
   shotTypeList: {
     gap: 12,
