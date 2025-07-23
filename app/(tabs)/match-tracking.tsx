@@ -132,46 +132,49 @@ export default function MatchTracking() {
   
   // Calculate dynamic modal height
   const getModalContentHeight = () => {
+    const buttonHeight = 60;
+    const gap = 12;
+    const titleHeight = 60;
+    const backButtonHeight = 50;
+    const containerPadding = 40;
+    const closeButtonHeight = 40;
+    
     if (!selectedPlayerId) {
-      // Player selector: 4 players + headers + title + back button + padding
-      const playerButtonHeight = 60;
+      // Player selector: 4 players + 2 team headers + spacing
       const numberOfPlayers = 4;
       const teamHeaders = 2;
-      const teamHeaderHeight = 30;
-      const titleHeight = 50;
-      const backButtonHeight = 40;
-      const containerPadding = 32;
-      const gapBetweenPlayers = 8;
-      const gapBetweenTeams = 16;
+      const teamHeaderHeight = 40;
+      const teamSpacing = 16;
+      const playerGap = 8;
       
-      const calculatedHeight = (numberOfPlayers * playerButtonHeight) + 
-                              (numberOfPlayers * gapBetweenPlayers) +
-                              (teamHeaders * teamHeaderHeight) +
-                              gapBetweenTeams +
-                              titleHeight + 
+      const calculatedHeight = titleHeight + 
                               backButtonHeight + 
+                              closeButtonHeight +
+                              (teamHeaders * teamHeaderHeight) + 
+                              (numberOfPlayers * buttonHeight) + 
+                              (numberOfPlayers * playerGap) + 
+                              teamSpacing + 
                               containerPadding;
       
-      return Math.min(calculatedHeight, screenHeight * 0.85);
+      return Math.min(calculatedHeight, screenHeight * 0.9);
     } else {
-      // Shot type selector: dynamic based on selected shot type
-      const buttonHeight = 60;
-      const gap = 12;
-      const titleHeight = 50;
-      const backButtonHeight = 40;
-      const containerPadding = 32;
+      // Shot type or specification selector
+      let numberOfButtons = 7; // Default for shot types
       
-      // Get specifications for selected shot type
-      const specifications = shotSpecifications[selectedEventType as keyof typeof shotSpecifications] || shotSpecifications.default;
-      const numberOfButtons = specifications.length;
+      if (selectedEventType) {
+        // If we're in shot specification phase
+        const specifications = shotSpecifications[selectedEventType as keyof typeof shotSpecifications] || shotSpecifications.default;
+        numberOfButtons = specifications.length;
+      }
       
-      const calculatedHeight = (numberOfButtons * buttonHeight) + 
-                              ((numberOfButtons - 1) * gap) + 
-                              titleHeight + 
+      const calculatedHeight = titleHeight + 
                               backButtonHeight + 
+                              closeButtonHeight +
+                              (numberOfButtons * buttonHeight) + 
+                              ((numberOfButtons - 1) * gap) + 
                               containerPadding;
       
-      return Math.min(calculatedHeight, screenHeight * 0.85);
+      return Math.min(calculatedHeight, screenHeight * 0.9);
     }
   };
   
