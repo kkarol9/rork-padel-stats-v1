@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ShotType, ShotSpecification } from '@/types';
 import { shotTypes, shotSpecifications } from '@/constants/shotTypes';
 import { colors } from '@/constants/colors';
@@ -36,19 +36,17 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
           <Text style={styles.backButtonText}>← Back to player selection</Text>
         </TouchableOpacity>
         
-        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-          <View style={styles.shotTypeList}>
-            {shotTypes.map((shot) => (
-              <TouchableOpacity
-                key={shot.id}
-                style={styles.shotTypeButton}
-                onPress={() => handleShotTypeSelect(shot.id as ShotType)}
-              >
-                <Text style={styles.shotTypeName}>{shot.label}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
+        <View style={styles.shotTypeList}>
+          {shotTypes.map((shot) => (
+            <TouchableOpacity
+              key={shot.id}
+              style={styles.shotTypeButton}
+              onPress={() => handleShotTypeSelect(shot.id as ShotType)}
+            >
+              <Text style={styles.shotTypeName}>{shot.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     );
   }
@@ -82,19 +80,17 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
         <Text style={styles.backButtonText}>← Back to shot types</Text>
       </TouchableOpacity>
       
-      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        <View style={styles.shotTypeList}>
-          {specifications.map((spec: { id: string; label: string }) => (
-            <TouchableOpacity
-              key={spec.id}
-              style={styles.shotTypeButton}
-              onPress={() => handleSpecificationSelect(spec.id as ShotSpecification)}
-            >
-              <Text style={styles.shotTypeName}>{spec.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+      <View style={styles.shotTypeList}>
+        {specifications.map((spec: { id: string; label: string }) => (
+          <TouchableOpacity
+            key={spec.id}
+            style={styles.shotTypeButton}
+            onPress={() => handleSpecificationSelect(spec.id as ShotSpecification)}
+          >
+            <Text style={styles.shotTypeName}>{spec.label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 }
@@ -104,7 +100,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
-    maxHeight: '80%',
   },
   title: {
     fontSize: 18,
@@ -112,9 +107,6 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 16,
     textAlign: 'center',
-  },
-  scrollContainer: {
-    maxHeight: 400,
   },
   shotTypeList: {
     gap: 12,

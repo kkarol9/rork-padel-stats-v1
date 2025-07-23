@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, FlatList, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, FlatList, ScrollView, Dimensions } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
@@ -11,6 +11,8 @@ import ShotTypeSelector from '@/components/ShotTypeSelector';
 import PlayerStatsCard from '@/components/PlayerStatsCard';
 import { X, BarChart3, RotateCcw, Flag, PlusCircle, Play } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+const { height: screenHeight } = Dimensions.get('window');
 
 export default function MatchTracking() {
   const router = useRouter();
@@ -127,6 +129,31 @@ export default function MatchTracking() {
     <PlayerStatsCard match={currentMatch} player={item} />
   );
   
+  // Calculate dynamic modal height
+  const getModalContentHeight = () => {
+    if (!selectedPlayerId) {
+      // Player selector: 4 players + headers + padding
+      return Math.min(screenHeight * 0.7, 400);
+    } else {
+      // Shot type selector: 7 buttons + title + back button + padding
+      const buttonHeight = 60; // padding 16 + text height + padding 16
+      const gap = 12;
+      const numberOfButtons = 7;
+      const titleHeight = 50;
+      const backButtonHeight = 40;
+      const containerPadding = 32;
+      
+      const calculatedHeight = (numberOfButtons * buttonHeight) + 
+                              ((numberOfButtons - 1) * gap) + 
+                              titleHeight + 
+                              backButtonHeight + 
+                              containerPadding;
+      
+      // Ensure it doesn't exceed 85% of screen height
+      return Math.min(calculatedHeight, screenHeight * 0.85);
+    }
+  };
+  
   return (
     <>
       <Stack.Screen 
@@ -202,7 +229,7 @@ export default function MatchTracking() {
           onRequestClose={handleCloseModal}
         >
           <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
+            <View style={[styles.modalContent, { height: getModalContentHeight() }]}>
               <TouchableOpacity 
                 style={styles.closeButton}
                 onPress={handleCloseModal}
@@ -372,7 +399,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     width: '100%',
-    maxHeight: '85%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
