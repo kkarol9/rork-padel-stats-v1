@@ -16,6 +16,18 @@ export const shotSpecifications = {
     { id: 'standard', label: 'Standard' },
     { id: 'other', label: 'Other' },
   ],
+  volley: [
+    { id: 'forehand', label: 'Forehand' },
+    { id: 'backhand', label: 'Backhand' },
+  ],
+  groundstroke: [
+    { id: 'forehand', label: 'Forehand' },
+    { id: 'backhand', label: 'Backhand' },
+  ],
+  lob: [
+    { id: 'forehand', label: 'Forehand' },
+    { id: 'backhand', label: 'Backhand' },
+  ],
   bajada: [
     { id: 'forehand', label: 'Forehand' },
     { id: 'backhand', label: 'Backhand' },
@@ -33,7 +45,7 @@ export const shotSpecifications = {
     { id: 'forehand', label: 'Forehand' },
     { id: 'backhand', label: 'Backhand' },
   ]
-};
+} as const;
 
 export const eventTypes = [
   { id: 'unforced_error', label: 'Unforced Error', color: '#e74c3c' },

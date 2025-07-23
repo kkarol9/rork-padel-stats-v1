@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Match, Player, EventType, ShotType, ShotSpecification } from '@/types';
+import { Match, Player, EventType, ShotType, ShotSpecification, MatchEvent } from '@/types';
 import { colors } from '@/constants/colors';
 
 type StatisticsCardProps = {
@@ -86,7 +86,7 @@ export default function StatisticsCard({ match, player }: StatisticsCardProps) {
   );
 }
 
-function createShotBreakdown(events: any[]): ShotBreakdown {
+function createShotBreakdown(events: MatchEvent[]): ShotBreakdown {
   const breakdown: ShotBreakdown = {};
   
   events.forEach(event => {
@@ -111,7 +111,7 @@ function renderShotBreakdown(breakdown: ShotBreakdown) {
     <View key={shotType} style={styles.shotTypeBreakdown}>
       <Text style={styles.shotTypeLabel}>{formatShotType(shotType as ShotType)}</Text>
       
-      {Object.entries(specifications).map(([spec, count]) => (
+      {specifications && Object.entries(specifications).map(([spec, count]) => (
         <View key={spec} style={styles.specificationRow}>
           <Text style={styles.specificationLabel}>{formatSpecification(spec as ShotSpecification)}</Text>
           <Text style={styles.specificationCount}>{count}</Text>

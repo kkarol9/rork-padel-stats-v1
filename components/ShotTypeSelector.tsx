@@ -54,7 +54,7 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
   }
   
   // If shot type is selected, show the specification selection
-  const specifications = shotSpecifications[selectedShotType] || shotSpecifications.default;
+  const specifications = shotSpecifications[selectedShotType as keyof typeof shotSpecifications] || shotSpecifications.default;
   
   const getSpecificationTitle = () => {
     switch (selectedShotType) {
@@ -84,7 +84,7 @@ export default function ShotTypeSelector({ onSelectComplete, onBack, title }: Sh
       
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.shotTypeList}>
-          {specifications.map((spec) => (
+          {specifications.map((spec: { id: string; label: string }) => (
             <TouchableOpacity
               key={spec.id}
               style={styles.shotTypeButton}
