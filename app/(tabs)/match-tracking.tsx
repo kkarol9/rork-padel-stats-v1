@@ -130,22 +130,23 @@ export default function MatchTracking() {
     <PlayerStatsCard match={currentMatch} player={item} />
   );
   
-  // Calculate dynamic modal height
+  // Calculate dynamic modal height with more accurate measurements
   const getModalContentHeight = () => {
-    const buttonHeight = 60;
+    const buttonHeight = 70; // Increased from 60 to account for actual button height
     const gap = 12;
-    const titleHeight = 60;
-    const backButtonHeight = 50;
-    const containerPadding = 40;
-    const closeButtonHeight = 40;
+    const titleHeight = 80; // Increased to account for title and spacing
+    const backButtonHeight = 60; // Increased to account for back button and spacing
+    const containerPadding = 50; // Increased padding
+    const closeButtonHeight = 50; // Increased close button area
+    const extraPadding = 30; // Extra padding for safety
     
     if (!selectedPlayerId) {
       // Player selector: 4 players + 2 team headers + spacing
       const numberOfPlayers = 4;
       const teamHeaders = 2;
-      const teamHeaderHeight = 40;
-      const teamSpacing = 16;
-      const playerGap = 8;
+      const teamHeaderHeight = 50; // Increased
+      const teamSpacing = 20; // Increased
+      const playerGap = 12; // Increased
       
       const calculatedHeight = titleHeight + 
                               backButtonHeight + 
@@ -154,7 +155,8 @@ export default function MatchTracking() {
                               (numberOfPlayers * buttonHeight) + 
                               (numberOfPlayers * playerGap) + 
                               teamSpacing + 
-                              containerPadding;
+                              containerPadding +
+                              extraPadding;
       
       return Math.min(calculatedHeight, screenHeight * 0.9);
     } else {
@@ -162,8 +164,9 @@ export default function MatchTracking() {
       let numberOfButtons = 7; // Default for shot types
       
       if (selectedEventType) {
-        // If we're in shot specification phase
-        const specifications = shotSpecifications[selectedEventType as keyof typeof shotSpecifications] || shotSpecifications.default;
+        // If we're in shot specification phase, get the actual number of specifications
+        const shotTypeKey = selectedEventType as keyof typeof shotSpecifications;
+        const specifications = shotSpecifications[shotTypeKey] || shotSpecifications.default;
         numberOfButtons = specifications.length;
       }
       
@@ -172,9 +175,10 @@ export default function MatchTracking() {
                               closeButtonHeight +
                               (numberOfButtons * buttonHeight) + 
                               ((numberOfButtons - 1) * gap) + 
-                              containerPadding;
+                              containerPadding +
+                              extraPadding;
       
-      return Math.min(calculatedHeight, screenHeight * 0.9);
+      return Math.min(calculatedHeight, screenHeight * 0.85); // Reduced max height to 85% to ensure it fits
     }
   };
   
