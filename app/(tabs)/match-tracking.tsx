@@ -11,6 +11,7 @@ import ShotTypeSelector from '@/components/ShotTypeSelector';
 import PlayerStatsCard from '@/components/PlayerStatsCard';
 import { X, BarChart3, RotateCcw, Flag, PlusCircle, Play } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { shotSpecifications } from '@/constants/shotTypes';
 
 const { height: screenHeight } = Dimensions.get('window');
 
@@ -132,16 +133,37 @@ export default function MatchTracking() {
   // Calculate dynamic modal height
   const getModalContentHeight = () => {
     if (!selectedPlayerId) {
-      // Player selector: 4 players + headers + padding
-      return Math.min(screenHeight * 0.7, 400);
-    } else {
-      // Shot type selector: 7 buttons + title + back button + padding
-      const buttonHeight = 60; // padding 16 + text height + padding 16
-      const gap = 12;
-      const numberOfButtons = 7;
+      // Player selector: 4 players + headers + title + back button + padding
+      const playerButtonHeight = 60;
+      const numberOfPlayers = 4;
+      const teamHeaders = 2;
+      const teamHeaderHeight = 30;
       const titleHeight = 50;
       const backButtonHeight = 40;
       const containerPadding = 32;
+      const gapBetweenPlayers = 8;
+      const gapBetweenTeams = 16;
+      
+      const calculatedHeight = (numberOfPlayers * playerButtonHeight) + 
+                              (numberOfPlayers * gapBetweenPlayers) +
+                              (teamHeaders * teamHeaderHeight) +
+                              gapBetweenTeams +
+                              titleHeight + 
+                              backButtonHeight + 
+                              containerPadding;
+      
+      return Math.min(calculatedHeight, screenHeight * 0.85);
+    } else {
+      // Shot type selector: dynamic based on selected shot type
+      const buttonHeight = 60;
+      const gap = 12;
+      const titleHeight = 50;
+      const backButtonHeight = 40;
+      const containerPadding = 32;
+      
+      // Get specifications for selected shot type
+      const specifications = shotSpecifications[selectedEventType as keyof typeof shotSpecifications] || shotSpecifications.default;
+      const numberOfButtons = specifications.length;
       
       const calculatedHeight = (numberOfButtons * buttonHeight) + 
                               ((numberOfButtons - 1) * gap) + 
@@ -149,7 +171,6 @@ export default function MatchTracking() {
                               backButtonHeight + 
                               containerPadding;
       
-      // Ensure it doesn't exceed 85% of screen height
       return Math.min(calculatedHeight, screenHeight * 0.85);
     }
   };
